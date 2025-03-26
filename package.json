@@ -1,0 +1,14 @@
+{
+  "name": "assembly-ai-drop",
+  "module": "index.ts",
+  "type": "module",
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "assemblyai": "^4.9.0"
+  }
+}

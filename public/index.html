@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Simple HTML Template</title>
+    <style>
+      /* Add your CSS styling here */
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+      }
+
+      header,
+      footer {
+        background-color: #f8f9fa;
+        padding: 10px;
+        text-align: center;
+      }
+
+      main {
+        padding: 20px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <header>
+      <h1>Assembly AI Drop</h1>
+    </header>
+    <main>
+      <h5>Upload a file</h5>
+      <form
+        id="uploadForm"
+        action="/api/upload"
+        method="post"
+        enctype="multipart/form-data"
+      >
+        <input id="file" name="file" type="file" accept="audio/m4a" />
+        <button id="submit" type="submit">Submit</button>
+      </form>
+    </main>
+  </body>
+
+  <script>
+    document
+      .getElementById("uploadForm")
+      .addEventListener("submit", function (event) {
+        event.preventDefault(); // Prevent default form submission
+
+        const formData = new FormData(this);
+
+        fetch(this.action, {
+          method: "POST",
+          body: formData,
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            function generateTable(data) {
+              // Create table elements
+              const table = document.createElement("table");
+              const thead = document.createElement("thead");
+              const tbody = document.createElement("tbody");
+
+              // Create header row
+              const headerRow = document.createElement("tr");
+              const headers = [
+                "Speaker",
+                "Confidence",
+                "Text",
+              ];
+
+              headers.forEach((headerText) => {
+                const th = document.createElement("th");
+                th.textContent = headerText;
+                headerRow.appendChild(th);
+              });
+
+              thead.appendChild(headerRow);
+              table.appendChild(thead);
+
+              // Create body rows
+              data.forEach((item) => {
+                const row = document.createElement("tr");
+
+                const tdSpeaker = document.createElement("td");
+                tdSpeaker.textContent = item.speaker;
+                row.appendChild(tdSpeaker);
+
+                const tdConfidence = document.createElement("td");
+                tdConfidence.textContent = item.confidence;
+                row.appendChild(tdConfidence);
+                
+                const tdText = document.createElement("td");
+                tdText.textContent = item.text;
+                row.appendChild(tdText);
+
+                tbody.appendChild(row);
+              });
+
+              table.appendChild(tbody);
+              document.body.appendChild(table); // Append the table to the body or a specific element
+            }
+            
+            generateTable(data);
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          });
+      });
+  </script>
+</html>
