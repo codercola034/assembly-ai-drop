@@ -111,6 +111,30 @@
       border-color: var(--primary-color);
     }
 
+    .speakers-container {
+      margin-bottom: 1rem;
+    }
+
+    .speakers-container label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+    }
+
+    .speakers-select {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #ddd;
+      border-radius: var(--border-radius);
+      font-size: 1rem;
+      background-color: white;
+    }
+
+    .speakers-select:focus {
+      outline: none;
+      border-color: var(--primary-color);
+    }
+
     .drop-zone {
       border: 2px dashed #ddd;
       border-radius: var(--border-radius);
@@ -503,6 +527,16 @@
             <button type="button" id="setApiKey" class="set-api-key-button">Set</button>
           </div>
         </div>
+        <div class="speakers-container">
+          <label for="speakersExpected">Number of Speakers</label>
+          <select id="speakersExpected" name="speakersExpected" class="speakers-select">
+            <option value="2" selected>2 Speakers</option>
+            <option value="3">3 Speakers</option>
+            <option value="4">4 Speakers</option>
+            <option value="5">5 Speakers</option>
+            <option value="6">6 Speakers</option>
+          </select>
+        </div>
         <div id="dropZone" class="drop-zone">
           <div class="drop-zone-content">
             <div class="drop-zone-icon">
@@ -664,6 +698,10 @@
       const formData = new FormData(this);
       // Add API key to form data
       formData.append('apiKey', apiKey);
+
+      // Add speakers expected to form data
+      const speakersExpected = document.getElementById('speakersExpected').value;
+      formData.append('speakersExpected', speakersExpected);
 
       // Start with upload step
       updateProcessingStep(1, "Uploading file...");

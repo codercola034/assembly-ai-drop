@@ -129,6 +129,7 @@ Bun.serve({
           const body = await req.formData();
           const file = body.get("file");
           const apiKey = body.get("apiKey");
+          const speakersExpected = body.get("speakersExpected");
 
           if (!file || !(file instanceof File)) {
             return new Response(
@@ -146,7 +147,20 @@ Bun.serve({
             );
           }
 
-          const result = await transcribe(file, apiKey);
+          // Convert speakersExpected to number and validate
+          const numSpeakers = speakersExpected
+            ? parseInt(speakersExpected as string, 10)
+            : 2;
+          if (isNaN(numSpeakers) || numSpeakers < 2 || numSpeakers > 6) {
+            return new Response(
+              JSON.stringify({
+                error: "Invalid number of speakers. Must be between 2 and 6.",
+              }),
+              { status: 400 }
+            );
+          }
+
+          const result = await transcribe(file, apiKey, numSpeakers);
           const baseFileName = file.name.replace(/\.[^/.]+$/, "");
           await fs.writeFile(
             path.join("./public/results", `${baseFileName}.txt`),
