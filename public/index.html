@@ -1,113 +1,894 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Simple HTML Template</title>
-    <style>
-      /* Add your CSS styling here */
-      body {
-        font-family: Arial, sans-serif;
-        margin: 0;
-        padding: 0;
-      }
 
-      header,
-      footer {
-        background-color: #f8f9fa;
-        padding: 10px;
-        text-align: center;
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Assembly AI Drop</title>
+  <style>
+    :root {
+      --primary-color: #4a90e2;
+      --secondary-color: #f8f9fa;
+      --text-color: #333;
+      --border-radius: 8px;
+      --box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      line-height: 1.6;
+      color: var(--text-color);
+      background-color: #f5f7fa;
+    }
+
+    header {
+      background-color: white;
+      padding: 0.75rem;
+      box-shadow: var(--box-shadow);
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .header-content {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .header-logo {
+      width: 32px;
+      height: 32px;
+      object-fit: contain;
+    }
+
+    header h1 {
+      font-size: 1.5rem;
+      color: var(--primary-color);
+      margin: 0;
+    }
+
+    main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1rem;
+      margin-top: 100px;
+      /* Add space for the fixed header */
+    }
+
+    .upload-container {
+      background-color: white;
+      padding: 2rem;
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+      margin-bottom: 2rem;
+    }
+
+    .upload-container h2 {
+      margin-bottom: 1.5rem;
+      color: var(--text-color);
+      font-size: 1.5rem;
+    }
+
+    #uploadForm {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .api-key-container {
+      margin-bottom: 1rem;
+    }
+
+    .api-key-container label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+    }
+
+    .api-key-container input {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #ddd;
+      border-radius: var(--border-radius);
+      font-size: 1rem;
+    }
+
+    .api-key-container input:focus {
+      outline: none;
+      border-color: var(--primary-color);
+    }
+
+    .drop-zone {
+      border: 2px dashed #ddd;
+      border-radius: var(--border-radius);
+      background-color: var(--secondary-color);
+      padding: 2rem;
+      text-align: center;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      min-height: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .drop-zone.drag-over {
+      border-color: var(--primary-color);
+      background-color: rgba(74, 144, 226, 0.05);
+    }
+
+    .drop-zone-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .drop-zone-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      color: var(--primary-color);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .drop-zone-icon svg {
+      width: 64px;
+      height: 64px;
+    }
+
+    .drop-zone-text {
+      font-size: 1.2rem;
+      font-weight: 500;
+      color: var(--text-color);
+    }
+
+    .drop-zone-subtext {
+      color: #666;
+      margin: 0.5rem 0;
+    }
+
+    .file-label {
+      background-color: var(--primary-color);
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: var(--border-radius);
+      cursor: pointer;
+      font-weight: 500;
+      transition: background-color 0.2s ease;
+    }
+
+    .file-label:hover {
+      background-color: #357abd;
+    }
+
+    .file-input {
+      display: none;
+    }
+
+    button {
+      background-color: var(--primary-color);
+      color: white;
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: var(--border-radius);
+      cursor: pointer;
+      font-weight: 600;
+      transition: background-color 0.2s ease;
+      align-self: flex-end;
+    }
+
+    button:hover {
+      background-color: #357abd;
+    }
+
+    button:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: white;
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+      margin-top: 2rem;
+      overflow: hidden;
+    }
+
+    th,
+    td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid #eee;
+    }
+
+    th {
+      background-color: var(--secondary-color);
+      font-weight: 600;
+      color: var(--text-color);
+    }
+
+    tr:hover {
+      background-color: #f8f9fa;
+    }
+
+    td {
+      color: #666;
+    }
+
+    .confidence-cell {
+      width: 100px;
+    }
+
+    .speaker-cell {
+      width: 100px;
+    }
+
+    /* Table container and copy button styles */
+    .table-container {
+      position: relative;
+      margin-top: 2rem;
+    }
+
+    .copy-button {
+      position: absolute;
+      top: 0.5rem;
+      right: 0.5rem;
+      background-color: white;
+      color: var(--primary-color);
+      border: 1px solid var(--primary-color);
+      padding: 0.5rem 1rem;
+      border-radius: var(--border-radius);
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.2s ease;
+    }
+
+    .copy-button:hover {
+      background-color: var(--primary-color);
+      color: white;
+    }
+
+    .copy-button.copied {
+      background-color: #4caf50;
+      color: white;
+      border-color: #4caf50;
+    }
+
+    /* Loading state */
+    .loading {
+      display: none;
+      text-align: center;
+      padding: 2rem;
+    }
+
+    .loading.active {
+      display: block;
+    }
+
+    /* Responsive design */
+    @media (max-width: 768px) {
+      header {
+        padding: 1rem;
       }
 
       main {
-        padding: 20px;
+        padding: 0 0.5rem;
       }
-    </style>
-  </head>
 
-  <body>
-    <header>
+      .upload-container {
+        padding: 1rem;
+      }
+
+      table {
+        display: block;
+        overflow-x: auto;
+      }
+    }
+
+    /* Loading Animation Styles */
+    .loading-container {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      background-color: white;
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+      margin: 2rem 0;
+    }
+
+    .loading-container.active {
+      display: flex;
+    }
+
+    .loading-spinner {
+      width: 50px;
+      height: 50px;
+      border: 5px solid #f3f3f3;
+      border-top: 5px solid var(--primary-color);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-bottom: 1rem;
+    }
+
+    .loading-text {
+      color: var(--text-color);
+      font-size: 1.1rem;
+      margin-top: 1rem;
+    }
+
+    .loading-progress {
+      width: 100%;
+      max-width: 300px;
+      height: 4px;
+      background-color: #f3f3f3;
+      border-radius: 2px;
+      overflow: hidden;
+      margin-top: 1rem;
+    }
+
+    .loading-progress-bar {
+      width: 0%;
+      height: 100%;
+      background-color: var(--primary-color);
+      border-radius: 2px;
+      animation: progress 2s ease-in-out infinite;
+    }
+
+    .loading-status {
+      color: #666;
+      font-size: 0.9rem;
+      margin-top: 0.5rem;
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    @keyframes progress {
+      0% {
+        width: 0%;
+        opacity: 1;
+      }
+
+      50% {
+        width: 100%;
+        opacity: 0.5;
+      }
+
+      100% {
+        width: 0%;
+        opacity: 1;
+      }
+    }
+
+    /* Processing Steps Animation */
+    .processing-steps {
+      margin-top: 1rem;
+      width: 100%;
+      max-width: 300px;
+    }
+
+    .processing-step {
+      display: flex;
+      align-items: center;
+      margin: 0.5rem 0;
+      opacity: 0.5;
+      transition: opacity 0.3s ease;
+    }
+
+    .processing-step.active {
+      opacity: 1;
+    }
+
+    .step-icon {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background-color: var(--primary-color);
+      margin-right: 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 12px;
+    }
+
+    .step-text {
+      font-size: 0.9rem;
+      color: var(--text-color);
+    }
+
+    .results-link {
+      color: var(--primary-color);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      padding: 0.5rem 1rem;
+      border-radius: var(--border-radius);
+      transition: background-color 0.2s ease;
+    }
+
+    .results-link:hover {
+      background-color: var(--secondary-color);
+    }
+
+    .error-message {
+      color: #d32f2f;
+      background-color: #ffebee;
+      padding: 1rem;
+      border-radius: var(--border-radius);
+      margin-bottom: 1rem;
+      display: none;
+    }
+
+    .error-message.visible {
+      display: block;
+    }
+
+    .api-key-input-group {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+
+    .set-api-key-button {
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 0.75rem 1rem;
+      border-radius: var(--border-radius);
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: background-color 0.2s ease;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .set-api-key-button:hover {
+      background-color: #357abd;
+    }
+
+    .set-api-key-button:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="header-content">
+      <img src="/public/favicon.ico" alt="Logo" class="header-logo" />
       <h1>Assembly AI Drop</h1>
-    </header>
-    <main>
-      <h5>Upload a file</h5>
-      <form
-        id="uploadForm"
-        action="/api/upload"
-        method="post"
-        enctype="multipart/form-data"
-      >
-        <input id="file" name="file" type="file" accept="audio/m4a" />
-        <button id="submit" type="submit">Submit</button>
+    </div>
+    <a href="/results" class="results-link">View Results</a>
+  </header>
+  <main>
+    <div class="upload-container">
+      <h2>Upload Audio File</h2>
+      <form id="uploadForm" action="/api/upload" method="post" enctype="multipart/form-data">
+        <div class="api-key-container">
+          <label for="apiKey">AssemblyAI API Key</label>
+          <div class="api-key-input-group">
+            <input type="password" id="apiKey" name="apiKey" placeholder="Enter your AssemblyAI API key" required />
+            <button type="button" id="setApiKey" class="set-api-key-button">Set</button>
+          </div>
+        </div>
+        <div id="dropZone" class="drop-zone">
+          <div class="drop-zone-content">
+            <div class="drop-zone-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="17 8 12 3 7 8"></polyline>
+                <line x1="12" y1="3" x2="12" y2="15"></line>
+              </svg>
+            </div>
+            <div class="drop-zone-text">Drag & drop your audio file here</div>
+            <div class="drop-zone-subtext">or</div>
+            <label for="file" class="file-label">Browse Files</label>
+            <input id="file" name="file" type="file" accept="audio/m4a" aria-label="Audio file" class="file-input" />
+          </div>
+        </div>
+        <div id="errorMessage" class="error-message"></div>
+        <button id="submit" type="submit">Process Audio</button>
       </form>
-    </main>
-  </body>
+    </div>
+    <div id="loadingContainer" class="loading-container">
+      <div class="loading-spinner"></div>
+      <div class="loading-text">Processing Your Audio File</div>
+      <div class="loading-progress">
+        <div class="loading-progress-bar"></div>
+      </div>
+      <div class="loading-status">Initializing...</div>
+      <div class="processing-steps">
+        <div class="processing-step" data-step="1">
+          <div class="step-icon">1</div>
+          <div class="step-text">Uploading file...</div>
+        </div>
+        <div class="processing-step" data-step="2">
+          <div class="step-icon">2</div>
+          <div class="step-text">Processing audio...</div>
+        </div>
+        <div class="processing-step" data-step="3">
+          <div class="step-icon">3</div>
+          <div class="step-text">Generating transcript...</div>
+        </div>
+        <div class="processing-step" data-step="4">
+          <div class="step-icon">4</div>
+          <div class="step-text">Finalizing results...</div>
+        </div>
+      </div>
+    </div>
+    <div id="results"></div>
+  </main>
+</body>
 
-  <script>
-    document
-      .getElementById("uploadForm")
-      .addEventListener("submit", function (event) {
-        event.preventDefault(); // Prevent default form submission
+<script>
+  // Function to set a cookie
+  function setCookie(name, value, days) {
+    const date = new Date();
+    date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+    const expires = "expires=" + date.toUTCString();
+    document.cookie = name + "=" + value + ";" + expires + ";path=/";
+  }
 
-        const formData = new FormData(this);
+  // Function to get a cookie
+  function getCookie(name) {
+    const cookieName = name + "=";
+    const cookies = document.cookie.split(';');
+    for (let i = 0; i < cookies.length; i++) {
+      let cookie = cookies[i];
+      while (cookie.charAt(0) === ' ') {
+        cookie = cookie.substring(1);
+      }
+      if (cookie.indexOf(cookieName) === 0) {
+        return cookie.substring(cookieName.length, cookie.length);
+      }
+    }
+    return "";
+  }
 
-        fetch(this.action, {
-          method: "POST",
-          body: formData,
+  // Load API key from cookie on page load
+  document.addEventListener('DOMContentLoaded', function () {
+    const apiKeyInput = document.getElementById('apiKey');
+    const setApiKeyButton = document.getElementById('setApiKey');
+    const savedApiKey = getCookie('assemblyai_api_key');
+
+    if (savedApiKey) {
+      apiKeyInput.value = savedApiKey;
+    }
+
+    // Add event listener for the Set button
+    setApiKeyButton.addEventListener('click', function () {
+      const apiKey = apiKeyInput.value.trim();
+
+      if (!apiKey) {
+        const errorMessage = document.getElementById('errorMessage');
+        errorMessage.textContent = 'Please enter your AssemblyAI API key';
+        errorMessage.classList.add('visible');
+        return;
+      }
+
+      // Save API key to cookie
+      setCookie('assemblyai_api_key', apiKey, 30); // Store for 30 days
+
+      // Show success feedback
+      const originalText = setApiKeyButton.textContent;
+      setApiKeyButton.textContent = 'Saved!';
+      setApiKeyButton.disabled = true;
+
+      // Clear any error message
+      const errorMessage = document.getElementById('errorMessage');
+      errorMessage.classList.remove('visible');
+
+      // Reset button after 2 seconds
+      setTimeout(() => {
+        setApiKeyButton.textContent = originalText;
+        setApiKeyButton.disabled = false;
+      }, 2000);
+    });
+  });
+
+  document
+    .getElementById("uploadForm")
+    .addEventListener("submit", function (event) {
+      event.preventDefault();
+
+      const apiKeyInput = document.getElementById('apiKey');
+      const apiKey = apiKeyInput.value.trim();
+
+      if (!apiKey) {
+        const errorMessage = document.getElementById('errorMessage');
+        errorMessage.textContent = 'Please enter your AssemblyAI API key';
+        errorMessage.classList.add('visible');
+        return;
+      }
+
+      // Save API key to cookie
+      setCookie('assemblyai_api_key', apiKey, 30); // Store for 30 days
+
+      const loadingContainer = document.getElementById("loadingContainer");
+      const resultsDiv = document.getElementById("results");
+      const submitButton = document.getElementById("submit");
+      const steps = document.querySelectorAll('.processing-step');
+      const loadingStatus = document.querySelector('.loading-status');
+      const errorMessage = document.getElementById('errorMessage');
+      errorMessage.classList.remove('visible');
+
+      // Reset and show loading state
+      loadingContainer.classList.add("active");
+      submitButton.disabled = true;
+      submitButton.textContent = "Processing...";
+      resultsDiv.innerHTML = "";
+
+      // Function to update processing steps
+      let currentStep = 1;
+      function updateProcessingStep(step, status) {
+        steps.forEach(s => s.classList.remove('active'));
+        for (let i = 0; i < step; i++) {
+          steps[i].classList.add('active');
+        }
+        loadingStatus.textContent = status;
+      }
+
+      const formData = new FormData(this);
+      // Add API key to form data
+      formData.append('apiKey', apiKey);
+
+      // Start with upload step
+      updateProcessingStep(1, "Uploading file...");
+
+      fetch(this.action, {
+        method: "POST",
+        body: formData,
+      })
+        .then(response => {
+          updateProcessingStep(2, "Processing audio...");
+          return response.json();
         })
-          .then((response) => response.json())
-          .then((data) => {
-            function generateTable(data) {
-              // Create table elements
-              const table = document.createElement("table");
-              const thead = document.createElement("thead");
-              const tbody = document.createElement("tbody");
+        .then(data => {
+          if (data.error) {
+            throw new Error(data.error);
+          }
 
-              // Create header row
-              const headerRow = document.createElement("tr");
-              const headers = [
-                "Speaker",
-                "Confidence",
-                "Text",
-              ];
+          updateProcessingStep(3, "Generating transcript...");
 
-              headers.forEach((headerText) => {
-                const th = document.createElement("th");
-                th.textContent = headerText;
-                headerRow.appendChild(th);
-              });
-
-              thead.appendChild(headerRow);
-              table.appendChild(thead);
-
-              // Create body rows
-              data.forEach((item) => {
-                const row = document.createElement("tr");
-
-                const tdSpeaker = document.createElement("td");
-                tdSpeaker.textContent = item.speaker;
-                row.appendChild(tdSpeaker);
-
-                const tdConfidence = document.createElement("td");
-                tdConfidence.textContent = item.confidence;
-                row.appendChild(tdConfidence);
-                
-                const tdText = document.createElement("td");
-                tdText.textContent = item.text;
-                row.appendChild(tdText);
-
-                tbody.appendChild(row);
-              });
-
-              table.appendChild(tbody);
-              document.body.appendChild(table); // Append the table to the body or a specific element
-            }
-            
-            generateTable(data);
-          })
-          .catch((error) => {
-            console.error("Error:", error);
+          // Simulate a small delay to show the processing steps
+          return new Promise(resolve => {
+            setTimeout(() => {
+              updateProcessingStep(4, "Finalizing results...");
+              setTimeout(() => resolve(data), 500);
+            }, 500);
           });
-      });
-  </script>
+        })
+        .then(data => {
+          function generateTable(res) {
+            const table = document.createElement("table");
+            const thead = document.createElement("thead");
+            const tbody = document.createElement("tbody");
+
+            const headerRow = document.createElement("tr");
+            const headers = ["Speaker", "Confidence", "Text"];
+
+            headers.forEach((headerText) => {
+              const th = document.createElement("th");
+              th.textContent = headerText;
+              if (headerText === "Speaker") th.className = "speaker-cell";
+              if (headerText === "Confidence") th.className = "confidence-cell";
+              headerRow.appendChild(th);
+            });
+
+            thead.appendChild(headerRow);
+            table.appendChild(thead);
+
+            console.log(res);
+            res.data.forEach((item) => {
+              const row = document.createElement("tr");
+
+              const tdSpeaker = document.createElement("td");
+              tdSpeaker.textContent = `${item.speaker}`;
+              tdSpeaker.className = "speaker-cell";
+              row.appendChild(tdSpeaker);
+
+              const tdConfidence = document.createElement("td");
+              tdConfidence.textContent = `${Math.round(item.confidence * 100)}%`;
+              tdConfidence.className = "confidence-cell";
+              row.appendChild(tdConfidence);
+
+              const tdText = document.createElement("td");
+              tdText.textContent = item.text;
+              row.appendChild(tdText);
+
+              tbody.appendChild(row);
+            });
+
+            table.appendChild(tbody);
+
+            // Create table container with copy button
+            const tableContainer = document.createElement("div");
+            tableContainer.className = "table-container";
+
+            // Create copy button
+            const copyButton = document.createElement("button");
+            copyButton.className = "copy-button";
+            copyButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg> Copy as Markdown';
+            copyButton.addEventListener("click", function () {
+              // Convert table to Markdown
+              const markdown = convertTableToMarkdown(table);
+
+              // Copy to clipboard
+              navigator.clipboard.writeText(markdown)
+                .then(() => {
+                  // Show feedback
+                  const originalText = copyButton.innerHTML;
+                  copyButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg> Copied!';
+                  copyButton.classList.add("copied");
+
+                  setTimeout(function () {
+                    copyButton.innerHTML = originalText;
+                    copyButton.classList.remove("copied");
+                  }, 2000);
+                })
+                .catch(err => {
+                  console.error('Failed to copy: ', err);
+                  alert('Failed to copy to clipboard. Please try again.');
+                });
+            });
+
+            // Function to convert HTML table to Markdown
+            function convertTableToMarkdown(table) {
+              const rows = table.querySelectorAll('tr');
+              let markdown = '';
+
+              // Process each row
+              rows.forEach((row, rowIndex) => {
+                const cells = row.querySelectorAll('th, td');
+                let rowMarkdown = '|';
+
+                // Add each cell to the row
+                cells.forEach(cell => {
+                  rowMarkdown += ` ${cell.textContent.trim()} |`;
+                });
+
+                markdown += rowMarkdown + '\n';
+
+                // Add separator row after header
+                if (rowIndex === 0) {
+                  let separatorRow = '|';
+                  for (let i = 0; i < cells.length; i++) {
+                    separatorRow += ' --- |';
+                  }
+                  markdown += separatorRow + '\n';
+                }
+              });
+
+              return markdown;
+            }
+
+            // Add table and copy button to container
+            tableContainer.appendChild(table);
+            tableContainer.appendChild(copyButton);
+
+            // Add container to results
+            resultsDiv.appendChild(tableContainer);
+          }
+
+          generateTable(data);
+        })
+        .catch((error) => {
+          resultsDiv.innerHTML = `
+            <div style="color: red; padding: 1rem; background-color: #fff; border-radius: var(--border-radius); box-shadow: var(--box-shadow);">
+              <strong>Error:</strong> ${error.message}
+            </div>
+          `;
+          console.error("Error:", error);
+        })
+        .finally(() => {
+          // Hide loading state
+          loadingContainer.classList.remove("active");
+          submitButton.disabled = false;
+          submitButton.textContent = "Process Audio";
+
+          // Reset processing steps
+          steps.forEach(step => step.classList.remove('active'));
+        });
+    });
+
+  // Drag and drop functionality
+  document.addEventListener('DOMContentLoaded', function () {
+    const dropZone = document.getElementById('dropZone');
+    const fileInput = document.getElementById('file');
+
+    // Prevent default drag behaviors
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+      dropZone.addEventListener(eventName, preventDefaults, false);
+      document.body.addEventListener(eventName, preventDefaults, false);
+    });
+
+    // Highlight drop zone when item is dragged over it
+    ['dragenter', 'dragover'].forEach(eventName => {
+      dropZone.addEventListener(eventName, highlight, false);
+    });
+
+    ['dragleave', 'drop'].forEach(eventName => {
+      dropZone.addEventListener(eventName, unhighlight, false);
+    });
+
+    // Handle dropped files
+    dropZone.addEventListener('drop', handleDrop, false);
+
+    // Handle click on drop zone
+    dropZone.addEventListener('click', () => {
+      fileInput.click();
+    });
+
+    // Handle file selection
+    fileInput.addEventListener('change', handleFiles);
+
+    function preventDefaults(e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+
+    function highlight() {
+      dropZone.classList.add('drag-over');
+    }
+
+    function unhighlight() {
+      dropZone.classList.remove('drag-over');
+    }
+
+    function handleDrop(e) {
+      const dt = e.dataTransfer;
+      const files = dt.files;
+
+      handleFiles({ target: { files: files } });
+    }
+
+    function handleFiles(e) {
+      const files = e.target.files;
+
+      if (files.length > 0) {
+        // Update drop zone to show selected file
+        const fileName = files[0].name;
+        const dropZoneText = dropZone.querySelector('.drop-zone-text');
+        dropZoneText.textContent = `Selected: ${fileName}`;
+
+        // Update file input
+        fileInput.files = files;
+      }
+    }
+  });
+</script>
+
 </html>
